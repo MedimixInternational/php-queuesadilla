@@ -103,7 +103,7 @@ abstract class PdoEngine extends Base
                 $this->quoteIdentifier('data'),
                 $this->quoteIdentifier($this->config('table'))
             ),
-            sprintf('WHERE %s = ? AND %s != 1', $this->quoteIdentifier('queue'), $this->quoteIdentifier('locked')),
+            sprintf('WHERE %s != 1', $this->quoteIdentifier('locked')),
             'AND (expires_at IS NULL OR expires_at > ?)',
             'AND (delay_until IS NULL OR delay_until < ?)',
             'ORDER BY priority ASC LIMIT 1 FOR UPDATE',

@@ -103,7 +103,7 @@ abstract class PdoEngine extends Base
                 $this->quoteIdentifier('data'),
                 $this->quoteIdentifier($this->config('table'))
             ),
-            sprintf('WHERE %s != 1', $this->quoteIdentifier('locked')),
+            sprintf('WHERE (STATUS = \'new\' OR STATUS = \'failed\') AND %s != 1', $this->quoteIdentifier('locked')),
             'AND (expires_at IS NULL OR expires_at > ?)',
             'AND (delay_until IS NULL OR delay_until < ?)',
             'ORDER BY priority ASC, created_at ASC LIMIT 1 FOR UPDATE',
@@ -116,9 +116,8 @@ abstract class PdoEngine extends Base
 
         try {
             $sth = $this->connection()->prepare($selectSql);
-            $sth->bindParam(1, $queue, PDO::PARAM_STR);
+            $sth->bindParam(1, $dtFormatted, PDO::PARAM_STR);
             $sth->bindParam(2, $dtFormatted, PDO::PARAM_STR);
-            $sth->bindParam(3, $dtFormatted, PDO::PARAM_STR);
 
             $this->connection()->beginTransaction();
             $sth->execute();

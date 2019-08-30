@@ -106,7 +106,7 @@ abstract class PdoEngine extends Base
             sprintf('WHERE %s != 1', $this->quoteIdentifier('locked')),
             'AND (expires_at IS NULL OR expires_at > ?)',
             'AND (delay_until IS NULL OR delay_until < ?)',
-            'ORDER BY priority ASC LIMIT 1 FOR UPDATE',
+            'ORDER BY priority ASC, created_at ASC LIMIT 1 FOR UPDATE',
             ]
         );
         $updateSql = sprintf('UPDATE %s SET locked = 1 WHERE id = ?', $this->quoteIdentifier($this->config('table')));

@@ -58,18 +58,27 @@ class MysqlEngine extends PdoEngine
 
         $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
 
-        try {
-            $this->connection = new PDO(
-                $dsn,
-                $config['user'],
-                $config['pass'],
-                $flags
-            );
-        } catch (PDOException $e) {
-            $this->logger()->error($e->getMessage());
-            $this->connection = null;
+        $limit = 10;
+        $counter = 0;
+        while (true) {
+            try {
+                $this->connection = new PDO(
+                    $dsn,
+                    $config['user'],
+                    $config['pass'],
+                    $flags
+                );
+                break;
+            } catch (PDOException $e) {
+                $this->connection = null;
+                unset($this->connection);
+                $counter++;
+                if ($counter == $limit) {
+                    $this->logger()->error($e->getMessage());
+                    $this->connection = null;
+                }
+            }
         }
-
         return (bool)$this->connection;
     }
 }

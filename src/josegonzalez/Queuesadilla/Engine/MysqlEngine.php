@@ -30,7 +30,6 @@ class MysqlEngine extends PdoEngine
         'expires_in' => null,
         'user' => null,
         'pass' => null,
-        'persistent' => true,
         'port' => 3306,
         'priority' => 0,
         'queue' => 'default',
@@ -51,7 +50,6 @@ class MysqlEngine extends PdoEngine
         }
 
         $flags = [
-            PDO::ATTR_PERSISTENT => $config['persistent'],
             PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ] + $config['flags'];
